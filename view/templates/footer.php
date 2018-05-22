@@ -1,7 +1,4 @@
-
-<?php if (isset($directory)) {
-        if ($directory === "hospital") { ?>
-    <p><a href="<?= URL ?>hospital/index">Home</a></p>
-<?php }}?>
+	<p><a href="<?= URL ?>home/index">Home</a></p>
+		<span>Made by Anoeska Clement.</span>
 	</body>
 </html>

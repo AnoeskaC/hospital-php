@@ -1,51 +1,43 @@
 <?php
 
-require(ROOT . "model/SpeciesModel.php");
+require(ROOT . 'model/SpeciesModel.php');
 
-function species()
-{
-	render("hospital/species", 
-		array(
-			'species' => getAllSpecies() , ));
+function index() {
+	render('species/index', array(
+		'species' => getAllSpecies()
+		));
 }
 
-function createSpec(){
-	if($_SERVER['REQUEST_METHOD'] == "POST"){
-		$data=array(
-			'species_description' => $_POST['species_description'],
-		);
-		newSpec($data);
-			echo "<script>alert('Diersoort toegevoegd'); window.location = '". URL ."patient/createPatient';</script>";
+function add() {
+	render('species/add');
+}
+
+function addSave() {
+	if (!addSpecie()) {
+		header('Location:' . URL . 'error/index');
+		exit();
 	}
-	render("hospital/species/create");
+	header('Location:' . URL . 'species/index');
 }
 
-function createNewSpec(){
-	if($_SERVER['REQUEST_METHOD'] == "POST"){
-		$data=array(
-			'species_description' => $_POST['species_description'],
-		);
-		newSpec($data);
-			echo "<script>alert('Diersoort toegevoegd'); window.location = '". URL ."species/species';</script>";
+function delete($id) {
+	if (!deleteSpecies($id)) {
+		header('Location:' . URL . 'error/index');
+		exit();
 	}
-	render("hospital/species/createNew");
+	header('Location:' . URL . 'species/index');
 }
 
-function deleteSpecies($id){
-		$species = getSpeciesById($id);
-	render("hospital/species/delete", ['species' => $species]);
-}
-function deleteASpecies($id){
-		deleteThisSpecies($id);
-	echo "<script>alert('Diersoort verwijderd'); window.location = '/hospital/species/species';</script>";
+function edit($id) {
+	render('species/edit', array(
+		'specie' => getSpecie($id)
+		));
 }
 
-function editSpecies($id){
-		$species = getSpeciesById($id);
-	render("hospital/species/edit", ['species' => $species]);
-}
-
-function saveSpeciesEdit(){
-		updateSpecies($_POST);
-	echo "<script>alert('Diersoort is aangepast'); window.location = '/hospital/species/species/';</script>";
+function editSave() {
+	if (!editSpecie()) {
+		header('Location:' . URL . 'error/index');
+		exit();
+	}
+	header('Location:' . URL . 'species/index');
 }

@@ -1,44 +1,64 @@
 <?php
 
-function getAllSpecies(){
+function getAllSpecies() {
 	$db = openDatabaseConnection();
 	$sql = "SELECT * FROM species";
 	$query = $db->prepare($sql);
 	$query->execute();
-	$db = null;
+	$db=null;
 	return $query->fetchAll();
 }
 
-function getSpeciesById($id){
+function addSpecie() {
+	$species = isset($_POST['species']) ? $_POST['species'] : null;
+	if (strlen($species) == 0) {
+		return false;
+	}
 	$db = openDatabaseConnection();
-	$sql = "SELECT * FROM `species` where species_id = :id ";
+	$sql = "INSERT INTO species(species_description) VALUES (:species)";
 	$query = $db->prepare($sql);
-	$query->bindParam(":id", $id);
-	$query->execute();
+	$query->execute(array(
+		':species' => $species
+		));
 	$db = null;
-	return $query->fetchAll();
+	return true;
 }
 
-function newSpec($data){
+function deleteSpecies($id = null) {
+	if (!$id) {
+		return false;
+	}
 	$db = openDatabaseConnection();
-	$sql = $db->prepare("INSERT INTO species (species_description)
-	VALUES (:species_description);");
-	$sql->bindParam(':species_description',$data['species_description'],PDO::PARAM_STR);
-	$sql->execute();
-}
-
-function deleteThisSpecies($id) {
-	$db = openDatabaseConnection();
-		$sql = $db->prepare("DELETE FROM species WHERE species_id = :id");
-		$sql->bindParam(":id", $id);
-	$sql->execute();
-}
-
-function updateSpecies($answers){
-	$db = openDatabaseConnection();
-	$sql = "UPDATE species SET species_description = :species_description WHERE species_id = :id";
+	$sql = "DELETE FROM species WHERE species_id = :id";
 	$query = $db->prepare($sql);
-	$query->bindParam(":species_description", $answers['species_description']);
-	$query->bindParam(":id", $answers['id']);
-	$query->execute();
+	$query->execute(array(
+		':id' => $id));
+	$db = null;
+	return true;
+}
+
+function getSpecie($id) {
+	$db = openDatabaseConnection();
+	$sql = "SELECT * FROM species WHERE species_id = :id";
+	$query = $db->prepare($sql);
+	$query->execute(array(
+		':id' => $id));
+	$db = null;
+	return $query->fetch();
+}
+
+function editSpecie() {
+	$specieDesc = isset($_POST['species']) ? $_POST['species'] : null;
+	$id = isset($_POST['id']) ? $_POST['id'] : null;
+	if (strlen($specieDesc) == 0) {
+		return false;
+	}
+	$db = openDatabaseConnection();
+	$sql = "UPDATE species SET species_description = :specieDesc WHERE species_id = :id";
+	$query = $db->prepare($sql);
+	$query->execute(array(
+		':specieDesc' => $specieDesc,
+		':id' => $id));
+	$db = null;
+	return true;
 }

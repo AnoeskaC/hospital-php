@@ -15,12 +15,6 @@ $data = $patient[0];
     <input type="text" id="patient_status" name="patient_status" minlength="2" maxlength="20" value="<?echo $data['patient_status'];?>" required>
 
     <label for="fname">Geslacht patiënt</label>
-    <br>
-    <label><input type="radio" name="patient_gender" value="man"> Man<br></label>
-    <br>
-    <label><input type="radio" name="patient_gender" value="vrouw"> Vrouw<br></label>
-
-
       <input type="hidden" name="id" value="<?= $data['patient_id'] ?>">
 
     <input type="submit" value="Versturen">
